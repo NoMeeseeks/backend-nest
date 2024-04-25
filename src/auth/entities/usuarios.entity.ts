@@ -5,7 +5,7 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 @Schema()
 export class Usuarios {
 
-    @Prop({ required: true, maxlength: 50 })
+    @Prop({ maxlength: 50, required: true })
     nombre: string;
 
     @Prop({ maxlength: 50 })
