@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CrearUsuarioDto } from './dto/crear-usuario.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -15,9 +15,28 @@ export class AuthService {
 
   }
 
-  create(crearUsuarioDto: CrearUsuarioDto) {
-    const nuevoUsuario = new this.usuariosModel(crearUsuarioDto);
-    return nuevoUsuario.save();
+  async create(crearUsuarioDto: CrearUsuarioDto) {
+    try {
+      const nuevoUsuario = new this.usuariosModel(crearUsuarioDto);
+      return await nuevoUsuario.save();
+      //paso 1 encriptar la contra
+      //paso 2 guardar el usuario
+      //paso 3 generar el json web token
+      //paso 4 manejar las excepciones
+
+
+
+
+    } catch (error) {
+      console.log(error.code);
+      if (error.code === 11000) {
+        throw new BadRequestException(`${crearUsuarioDto.correo} ya existe`)
+      }
+      throw new BadRequestException(`upps esto no debio pasar`)
+    }
+
+    // const nuevoUsuario = new this.usuariosModel(crearUsuarioDto);
+    // return nuevoUsuario.save();
   }
 
   findAll() {
