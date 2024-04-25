@@ -5,6 +5,9 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Usuarios } from './entities/usuarios.entity';
 import { Model } from 'mongoose';
 import * as bcryptjs from 'bcryptjs'
+import { LoginDto } from './dto/login-usuario.dto';
+import { JwtService } from '@nestjs/jwt';
+import { JwtPayload } from './interfaces/jwt-payload';
 
 @Injectable()
 export class AuthService {
@@ -12,6 +15,8 @@ export class AuthService {
   constructor(
     @InjectModel(Usuarios.name)
     private usuariosModel: Model<Usuarios>,
+
+    private jwtService: JwtService,
   ) {
 
   }
@@ -46,6 +51,37 @@ export class AuthService {
     // return nuevoUsuario.save();
   }
 
+  async login(loginDto: LoginDto) {
+    /**
+     * Debe regresar:
+     * Usuario
+     * Token
+    */
+
+    //desectruturamos
+    const { correo, contrasena } = loginDto;
+
+    //obtenemos el valor del correo
+    const usuario = await this.usuariosModel.findOne({ correo })
+    //validacion del correo
+    if (!usuario) {
+      throw new BadRequestException(`La credencial del correo no es valida`)
+    }
+
+    //validacion de la contrasena
+    if (!bcryptjs.compareSync(contrasena, usuario.contrasena)) {
+      throw new BadRequestException(`La credencial de la contraseña no es valida`)
+    }
+
+    //desectruturamos para no devolver la contrasena
+    const { contrasena: _, ...rest } = usuario.toJSON();
+
+    return {
+      usuario: rest,
+      token: this.getJwt({ id: usuario.id })
+    };
+  }
+
   findAll() {
     return `This action returns all auth`;
   }
@@ -60,5 +96,10 @@ export class AuthService {
 
   remove(id: number) {
     return `This action removes a #${id} auth`;
+  }
+
+  getJwt(payload: JwtPayload) {
+    const token = this.jwtService.sign(payload)
+    return token;
   }
 }
