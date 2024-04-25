@@ -19,7 +19,7 @@ export class Usuarios {
     correo: string;
 
     @Prop({ minlength: 8, required: true })
-    contrasena: string;
+    contrasena?: string;
 
     //valor que se asigna por defecto
     @Prop({ default: true })

@@ -4,6 +4,7 @@ import { UpdateAuthDto } from './dto/update-auth.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Usuarios } from './entities/usuarios.entity';
 import { Model } from 'mongoose';
+import * as bcryptjs from 'bcryptjs'
 
 @Injectable()
 export class AuthService {
@@ -15,18 +16,24 @@ export class AuthService {
 
   }
 
-  async create(crearUsuarioDto: CrearUsuarioDto) {
+  async create(crearUsuarioDto: CrearUsuarioDto): Promise<Usuarios> {
     try {
-      const nuevoUsuario = new this.usuariosModel(crearUsuarioDto);
-      return await nuevoUsuario.save();
+      //desectructuramos el objeto
+      const { contrasena, ...usuarioData } = crearUsuarioDto;
+
       //paso 1 encriptar la contra
-      //paso 2 guardar el usuario
+      const nuevoUsuario = new this.usuariosModel({
+        contrasena: bcryptjs.hashSync(contrasena, 10),
+        ...usuarioData
+      });
+      //paso 2 guardar el usuario y creamos una forma para no devolver la contra encriptada
+      await nuevoUsuario.save();
+      const { contrasena: _, ...Usuario } = nuevoUsuario.toJSON();
+      return Usuario;
       //paso 3 generar el json web token
+
+
       //paso 4 manejar las excepciones
-
-
-
-
     } catch (error) {
       console.log(error.code);
       if (error.code === 11000) {
