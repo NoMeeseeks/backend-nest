@@ -8,6 +8,7 @@ import * as bcryptjs from 'bcryptjs'
 import { LoginDto } from './dto/login-usuario.dto';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './interfaces/jwt-payload';
+import { LoginResponse } from './interfaces/login-response';
 
 @Injectable()
 export class AuthService {
@@ -21,7 +22,7 @@ export class AuthService {
 
   }
 
-  async create(crearUsuarioDto: CrearUsuarioDto): Promise<Usuarios> {
+  async crearUsuario(crearUsuarioDto: CrearUsuarioDto): Promise<Usuarios> {
     try {
       //desectructuramos el objeto
       const { contrasena, ...usuarioData } = crearUsuarioDto;
@@ -35,10 +36,7 @@ export class AuthService {
       await nuevoUsuario.save();
       const { contrasena: _, ...Usuario } = nuevoUsuario.toJSON();
       return Usuario;
-      //paso 3 generar el json web token
-
-
-      //paso 4 manejar las excepciones
+      //paso 3 manejar las excepciones
     } catch (error) {
       console.log(error.code);
       if (error.code === 11000) {
@@ -51,7 +49,7 @@ export class AuthService {
     // return nuevoUsuario.save();
   }
 
-  async login(loginDto: LoginDto) {
+  async iniciarSesion(loginDto: LoginDto): Promise<LoginResponse> {
     /**
      * Debe regresar:
      * Usuario
@@ -82,6 +80,17 @@ export class AuthService {
     };
   }
 
+  async registrarse(registro: CrearUsuarioDto): Promise<LoginResponse> {
+
+    const registroDeUsuario: Usuarios = this.crearUsuario(registro)
+
+    return {
+      usuario: registroDeUsuario,
+      token: ''
+    }
+  }
+
+
   findAll() {
     return `This action returns all auth`;
   }
@@ -99,6 +108,7 @@ export class AuthService {
   }
 
   getJwt(payload: JwtPayload) {
+    //generar el json web token
     const token = this.jwtService.sign(payload)
     return token;
   }

@@ -10,12 +10,17 @@ export class AuthController {
 
   @Post()
   create(@Body() crearUsuarioDto: CrearUsuarioDto) {
-    return this.authService.create(crearUsuarioDto);
+    return this.authService.crearUsuario(crearUsuarioDto);
   }
 
-  @Post('/login')
+  @Post('/iniciarSesion')
   login(@Body() loginUsuario: LoginDto) {
-    return this.authService.login(loginUsuario);
+    return this.authService.iniciarSesion(loginUsuario);
+  }
+
+  @Post('/registrarse')
+  registrarse(@Body() crearUsuarioDto: CrearUsuarioDto) {
+    return this.authService.iniciarSesion(crearUsuarioDto);
   }
 
   @Get()
