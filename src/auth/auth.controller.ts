@@ -20,7 +20,7 @@ export class AuthController {
 
   @Post('/registrarse')
   registrarse(@Body() crearUsuarioDto: CrearUsuarioDto) {
-    return this.authService.iniciarSesion(crearUsuarioDto);
+    return this.authService.registrarse(crearUsuarioDto);
   }
 
   @Get()

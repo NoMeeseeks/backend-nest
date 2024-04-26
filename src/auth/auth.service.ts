@@ -82,11 +82,11 @@ export class AuthService {
 
   async registrarse(registro: CrearUsuarioDto): Promise<LoginResponse> {
 
-    const registroDeUsuario: Usuarios = this.crearUsuario(registro)
+    const registrarUsuario = await this.crearUsuario(registro)
 
     return {
-      usuario: registroDeUsuario,
-      token: ''
+      usuario: registrarUsuario,
+      token: 'Xavier',
     }
   }
 
