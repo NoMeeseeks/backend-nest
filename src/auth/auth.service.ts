@@ -81,18 +81,15 @@ export class AuthService {
   }
 
   async registrarse(registro: CrearUsuarioDto): Promise<LoginResponse> {
-
     const registrarUsuario = await this.crearUsuario(registro)
-
     return {
       usuario: registrarUsuario,
-      token: 'Xavier',
+      token: this.getJwt({ id: registrarUsuario._id }),
     }
   }
 
-
-  findAll() {
-    return `This action returns all auth`;
+  findAll(): Promise<Usuarios[]> {
+    return this.usuariosModel.find();
   }
 
   findOne(id: number) {
