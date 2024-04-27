@@ -92,21 +92,27 @@ export class AuthService {
     return this.usuariosModel.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
+  // findOne(id: number) {
+  //   return `This action returns a #${id} auth`;
+  // }
 
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
+  // update(id: number, updateAuthDto: UpdateAuthDto) {
+  //   return `This action updates a #${id} auth`;
+  // }
 
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
-  }
+  // remove(id: number) {
+  //   return `This action removes a #${id} auth`;
+  // }
 
   getJwt(payload: JwtPayload) {
     //generar el json web token
     const token = this.jwtService.sign(payload)
     return token;
+  }
+
+  async buscarUsuarioPorId(id: string) {
+    const usuario = await this.usuariosModel.findById(id);
+    const { contrasena, ...rest } = usuario.toJSON();
+    return rest
   }
 }
