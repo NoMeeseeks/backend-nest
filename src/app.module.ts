@@ -9,7 +9,9 @@ import { ConfigModule } from '@nestjs/config';
     ConfigModule.forRoot(),
 
     //modulo para usar mongo db
-    MongooseModule.forRoot(process.env.MONGO_URI),
+    MongooseModule.forRoot(process.env.MONGO_URI, {
+      dbName: process.env.MONGO_DB_NAME
+    }),
     // MongooseModule.forRoot('mongodb://localhost:27017'),
 
     //modulo de authenticacion
