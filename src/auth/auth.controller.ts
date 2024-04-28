@@ -37,7 +37,7 @@ export class AuthController {
   }
 
   @UseGuards(AuthGuard)
-  @Get('/renovarToken')
+  @Get('/verificarToken')
   validarToken(@Request() req: Request): LoginResponse {
     const usuario = req['usuario'] as Usuarios;
     return {
